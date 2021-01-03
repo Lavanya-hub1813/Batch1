@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="124182d6-60fa-4554-bb0e-8f6c79baa2be" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="a7bf9bd1-3123-4e1d-9535-ed8432549ece" >
+		<jms:active-mq-connection />
+	</jms:config>
+	<flow name="activemqFlow" doc:id="a3fc4846-d66b-4468-b7ca-6d80f7d8b16a" >
+		<http:listener doc:name="Listener" doc:id="ef36c03e-68d9-4828-8b59-4187595b5061" config-ref="HTTP_Listener_config" path="/pub"/>
+		<set-payload value='#["The message has been Published"]' doc:name="Set Payload" doc:id="2d484910-f8a0-4f3d-84ce-cd534490e777" />
+		<jms:publish doc:name="Publish" doc:id="cd7ccdb0-b2ca-451b-a136-4e9d9c6fe455" config-ref="JMS_Config" destination="Mule4Q2"/>
+	</flow>
+	<flow name="activemqFlow1" doc:id="c908482b-9a26-4d0d-a266-fff8fff89799" >
+		<jms:listener doc:name="Listener" doc:id="44592205-f91f-42df-a1af-a49e5dd46dfc" config-ref="JMS_Config" destination="Mule4Q2"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3ac9be11-b924-4e34-bd24-8c31f7d8d397" />
+	</flow>
+</mule>
